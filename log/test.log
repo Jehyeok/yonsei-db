@@ -1,0 +1,166 @@
+  [1m[36mSQL (62.8ms)[0m  [1mCREATE EXTENSION IF NOT EXISTS "plpgsql"[0m
+  [1m[35m (470.4ms)[0m  CREATE TABLE "boards" ("id" serial primary key, "title" character varying(255), "content" text, "created_at" timestamp, "updated_at" timestamp) 
+  [1m[36m (5.4ms)[0m  [1mCREATE TABLE "comments" ("id" serial primary key, "content" text, "created_at" timestamp, "updated_at" timestamp) [0m
+  [1m[35m (1.2ms)[0m  CREATE TABLE "liked_posts_users" ("liked_post_id" integer NOT NULL, "user_id" integer NOT NULL) 
+  [1m[36m (30.5ms)[0m  [1mCREATE TABLE "owners" ("id" serial primary key, "name" character varying(255), "signin_id" character varying(255), "password" character varying(255), "phone_number" character varying(255), "address" character varying(255), "grade" character varying(255) DEFAULT '0', "created_at" timestamp, "updated_at" timestamp) [0m
+  [1m[35m (1.1ms)[0m  CREATE TABLE "owners_shops" ("shop_id" integer NOT NULL, "owner_id" integer NOT NULL) 
+  [1m[36m (1.3ms)[0m  [1mCREATE TABLE "owners_users" ("owner_id" integer NOT NULL, "user_id" integer NOT NULL) [0m
+  [1m[35m (20.4ms)[0m  CREATE TABLE "posts" ("id" serial primary key, "created_at" timestamp, "updated_at" timestamp, "like_num" integer DEFAULT 0, "view_num" integer DEFAULT 0, "scrap_num" integer DEFAULT 0, "description" text, "main_img_name" character varying(255), "img_names" character varying(255)[] DEFAULT '{}', "categories" character varying(255)[] DEFAULT '{}') 
+  [1m[36m (1.4ms)[0m  [1mCREATE TABLE "scraped_posts_users" ("scraped_post_id" integer NOT NULL, "user_id" integer NOT NULL) [0m
+  [1m[35m (4.1ms)[0m  CREATE TABLE "shops" ("id" serial primary key, "name" character varying(255), "phone_number" character varying(255), "address" character varying(255), "shop_img_name" character varying(255), "suid" character varying(255), "insta_url" character varying(255), "access_token" character varying(255), "created_at" timestamp, "updated_at" timestamp) 
+  [1m[36m (3.7ms)[0m  [1mCREATE TABLE "tasks" ("id" serial primary key, "owner_id" integer, "user_id" integer, "shop_id" integer, "title" character varying(255), "cost" integer, "treat_time" integer, "memo" text, "comment" text, "reserved_at" timestamp, "treat_img_name" character varying(255), "people_num" character varying(255), "is_completed" boolean DEFAULT 'f', "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) [0m
+  [1m[35m (2.0ms)[0m  CREATE  INDEX  "index_tasks_on_owner_id" ON "tasks" USING btree ("owner_id")
+  [1m[36m (1.4ms)[0m  [1mCREATE  INDEX  "index_tasks_on_shop_id" ON "tasks" USING btree ("shop_id")[0m
+  [1m[35m (1.8ms)[0m  CREATE  INDEX  "index_tasks_on_user_id" ON "tasks" USING btree ("user_id")
+  [1m[36m (4.7ms)[0m  [1mCREATE TABLE "users" ("id" serial primary key, "created_at" timestamp, "updated_at" timestamp, "name" character varying(255), "password" character varying(255), "email" character varying(255), "access_token" character varying(255), "suid" character varying(255), "nickname" character varying(255), "phone_number" character varying(255), "address" character varying(255), "job" character varying(255), "birthday" timestamp, "description" text, "gender" integer, "age" integer) [0m
+  [1m[35m (1.0ms)[0m  CREATE TABLE "schema_migrations" ("version" character varying(255) NOT NULL) 
+  [1m[36m (1.9ms)[0m  [1mCREATE UNIQUE INDEX  "unique_schema_migrations" ON "schema_migrations"  ("version")[0m
+  [1m[35m (16.1ms)[0m  SELECT version FROM "schema_migrations"
+  [1m[36m (19.1ms)[0m  [1mINSERT INTO "schema_migrations" (version) VALUES ('20151005122500')[0m
+  [1m[35m (1.0ms)[0m  INSERT INTO "schema_migrations" (version) VALUES ('20150810145409')
+  [1m[36m (0.7ms)[0m  [1mINSERT INTO "schema_migrations" (version) VALUES ('20150902014751')[0m
+  [1m[35m (0.5ms)[0m  INSERT INTO "schema_migrations" (version) VALUES ('20150916074050')
+  [1m[36m (0.5ms)[0m  [1mINSERT INTO "schema_migrations" (version) VALUES ('20150916074102')[0m
+  [1m[35m (0.5ms)[0m  INSERT INTO "schema_migrations" (version) VALUES ('20150916090227')
+  [1m[36m (0.5ms)[0m  [1mINSERT INTO "schema_migrations" (version) VALUES ('20150916090521')[0m
+  [1m[35m (0.4ms)[0m  INSERT INTO "schema_migrations" (version) VALUES ('20150921021138')
+  [1m[36m (0.4ms)[0m  [1mINSERT INTO "schema_migrations" (version) VALUES ('20150921021338')[0m
+  [1m[35m (0.4ms)[0m  INSERT INTO "schema_migrations" (version) VALUES ('20150921033024')
+  [1m[36m (0.5ms)[0m  [1mINSERT INTO "schema_migrations" (version) VALUES ('20151005121244')[0m
+  [1m[35mActiveRecord::SchemaMigration Load (0.2ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+  [1m[36m (26.7ms)[0m  [1mALTER TABLE "boards" DISABLE TRIGGER ALL;ALTER TABLE "comments" DISABLE TRIGGER ALL;ALTER TABLE "liked_posts_users" DISABLE TRIGGER ALL;ALTER TABLE "owners" DISABLE TRIGGER ALL;ALTER TABLE "owners_shops" DISABLE TRIGGER ALL;ALTER TABLE "owners_users" DISABLE TRIGGER ALL;ALTER TABLE "posts" DISABLE TRIGGER ALL;ALTER TABLE "scraped_posts_users" DISABLE TRIGGER ALL;ALTER TABLE "shops" DISABLE TRIGGER ALL;ALTER TABLE "tasks" DISABLE TRIGGER ALL;ALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "schema_migrations" DISABLE TRIGGER ALL[0m
+  [1m[35m (0.2ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM "boards"[0m
+  [1m[35mFixture Insert (17.4ms)[0m  INSERT INTO "boards" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:15:17', '2015-10-23 04:15:17', 980190962)
+  [1m[36mFixture Insert (0.3ms)[0m  [1mINSERT INTO "boards" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:15:17', '2015-10-23 04:15:17', 298486374)[0m
+  [1m[35mFixture Delete (0.3ms)[0m  DELETE FROM "comments"
+  [1m[36mFixture Insert (0.4ms)[0m  [1mINSERT INTO "comments" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:15:17', '2015-10-23 04:15:17', 980190962)[0m
+  [1m[35mFixture Insert (0.2ms)[0m  INSERT INTO "comments" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:15:17', '2015-10-23 04:15:17', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM "owners"[0m
+  [1m[35mFixture Insert (0.4ms)[0m  INSERT INTO "owners" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:15:17', '2015-10-23 04:15:17', 980190962)
+  [1m[36mFixture Insert (0.2ms)[0m  [1mINSERT INTO "owners" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:15:17', '2015-10-23 04:15:17', 298486374)[0m
+  [1m[35mFixture Delete (0.3ms)[0m  DELETE FROM "posts"
+  [1m[36mFixture Insert (0.4ms)[0m  [1mINSERT INTO "posts" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:15:17', '2015-10-23 04:15:17', 980190962)[0m
+  [1m[35mFixture Insert (0.2ms)[0m  INSERT INTO "posts" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:15:17', '2015-10-23 04:15:17', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM "shops"[0m
+  [1m[35mFixture Insert (0.3ms)[0m  INSERT INTO "shops" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:15:17', '2015-10-23 04:15:17', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO "shops" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:15:17', '2015-10-23 04:15:17', 298486374)[0m
+  [1m[35mFixture Delete (0.4ms)[0m  DELETE FROM "tasks"
+  [1m[36mFixture Insert (0.5ms)[0m  [1mINSERT INTO "tasks" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:15:17', '2015-10-23 04:15:17', 980190962)[0m
+  [1m[35mFixture Insert (0.2ms)[0m  INSERT INTO "tasks" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:15:17', '2015-10-23 04:15:17', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM "users"[0m
+  [1m[35mFixture Insert (0.3ms)[0m  INSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:15:17', '2015-10-23 04:15:17', 980190962)
+  [1m[36mFixture Insert (0.2ms)[0m  [1mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:15:17', '2015-10-23 04:15:17', 298486374)[0m
+  [1m[35m (0.6ms)[0m  COMMIT
+  [1m[36m (0.3ms)[0m  [1mALTER TABLE "boards" ENABLE TRIGGER ALL;ALTER TABLE "comments" ENABLE TRIGGER ALL;ALTER TABLE "liked_posts_users" ENABLE TRIGGER ALL;ALTER TABLE "owners" ENABLE TRIGGER ALL;ALTER TABLE "owners_shops" ENABLE TRIGGER ALL;ALTER TABLE "owners_users" ENABLE TRIGGER ALL;ALTER TABLE "posts" ENABLE TRIGGER ALL;ALTER TABLE "scraped_posts_users" ENABLE TRIGGER ALL;ALTER TABLE "shops" ENABLE TRIGGER ALL;ALTER TABLE "tasks" ENABLE TRIGGER ALL;ALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "schema_migrations" ENABLE TRIGGER ALL[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+--------------------------
+PostTest: test_save_images
+--------------------------
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.9ms)[0m  ALTER TABLE "boards" DISABLE TRIGGER ALL;ALTER TABLE "comments" DISABLE TRIGGER ALL;ALTER TABLE "liked_posts_users" DISABLE TRIGGER ALL;ALTER TABLE "owners" DISABLE TRIGGER ALL;ALTER TABLE "owners_shops" DISABLE TRIGGER ALL;ALTER TABLE "owners_users" DISABLE TRIGGER ALL;ALTER TABLE "posts" DISABLE TRIGGER ALL;ALTER TABLE "scraped_posts_users" DISABLE TRIGGER ALL;ALTER TABLE "shops" DISABLE TRIGGER ALL;ALTER TABLE "tasks" DISABLE TRIGGER ALL;ALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "schema_migrations" DISABLE TRIGGER ALL
+  [1m[36m (0.2ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.6ms)[0m  DELETE FROM "boards"
+  [1m[36mFixture Insert (0.4ms)[0m  [1mINSERT INTO "boards" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:16:04', '2015-10-23 04:16:04', 980190962)[0m
+  [1m[35mFixture Insert (0.2ms)[0m  INSERT INTO "boards" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:16:04', '2015-10-23 04:16:04', 298486374)
+  [1m[36mFixture Delete (0.2ms)[0m  [1mDELETE FROM "comments"[0m
+  [1m[35mFixture Insert (0.2ms)[0m  INSERT INTO "comments" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:16:04', '2015-10-23 04:16:04', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO "comments" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:16:04', '2015-10-23 04:16:04', 298486374)[0m
+  [1m[35mFixture Delete (0.2ms)[0m  DELETE FROM "owners"
+  [1m[36mFixture Insert (0.2ms)[0m  [1mINSERT INTO "owners" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:16:04', '2015-10-23 04:16:04', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO "owners" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:16:04', '2015-10-23 04:16:04', 298486374)
+  [1m[36mFixture Delete (0.2ms)[0m  [1mDELETE FROM "posts"[0m
+  [1m[35mFixture Insert (0.2ms)[0m  INSERT INTO "posts" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:16:04', '2015-10-23 04:16:04', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO "posts" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:16:04', '2015-10-23 04:16:04', 298486374)[0m
+  [1m[35mFixture Delete (0.2ms)[0m  DELETE FROM "shops"
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO "shops" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:16:04', '2015-10-23 04:16:04', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO "shops" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:16:04', '2015-10-23 04:16:04', 298486374)
+  [1m[36mFixture Delete (0.4ms)[0m  [1mDELETE FROM "tasks"[0m
+  [1m[35mFixture Insert (0.2ms)[0m  INSERT INTO "tasks" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:16:04', '2015-10-23 04:16:04', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO "tasks" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:16:04', '2015-10-23 04:16:04', 298486374)[0m
+  [1m[35mFixture Delete (0.3ms)[0m  DELETE FROM "users"
+  [1m[36mFixture Insert (0.2ms)[0m  [1mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:16:04', '2015-10-23 04:16:04', 980190962)[0m
+  [1m[35mFixture Insert (0.2ms)[0m  INSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:16:04', '2015-10-23 04:16:04', 298486374)
+  [1m[36m (0.6ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.3ms)[0m  ALTER TABLE "boards" ENABLE TRIGGER ALL;ALTER TABLE "comments" ENABLE TRIGGER ALL;ALTER TABLE "liked_posts_users" ENABLE TRIGGER ALL;ALTER TABLE "owners" ENABLE TRIGGER ALL;ALTER TABLE "owners_shops" ENABLE TRIGGER ALL;ALTER TABLE "owners_users" ENABLE TRIGGER ALL;ALTER TABLE "posts" ENABLE TRIGGER ALL;ALTER TABLE "scraped_posts_users" ENABLE TRIGGER ALL;ALTER TABLE "shops" ENABLE TRIGGER ALL;ALTER TABLE "tasks" ENABLE TRIGGER ALL;ALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "schema_migrations" ENABLE TRIGGER ALL
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+--------------------------
+PostTest: test_save_images
+--------------------------
+  [1m[35m (0.1ms)[0m  SAVEPOINT active_record_1
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "posts" ("created_at", "updated_at") VALUES ($1, $2) RETURNING "id"[0m  [["created_at", "2015-10-23 04:16:04.136105"], ["updated_at", "2015-10-23 04:16:04.136105"]]
+  [1m[35m (0.1ms)[0m  RELEASE SAVEPOINT active_record_1
+  [1m[36m (0.1ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  RELEASE SAVEPOINT active_record_1
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.7ms)[0m  ALTER TABLE "boards" DISABLE TRIGGER ALL;ALTER TABLE "comments" DISABLE TRIGGER ALL;ALTER TABLE "liked_posts_users" DISABLE TRIGGER ALL;ALTER TABLE "owners" DISABLE TRIGGER ALL;ALTER TABLE "owners_shops" DISABLE TRIGGER ALL;ALTER TABLE "owners_users" DISABLE TRIGGER ALL;ALTER TABLE "posts" DISABLE TRIGGER ALL;ALTER TABLE "scraped_posts_users" DISABLE TRIGGER ALL;ALTER TABLE "shops" DISABLE TRIGGER ALL;ALTER TABLE "tasks" DISABLE TRIGGER ALL;ALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "schema_migrations" DISABLE TRIGGER ALL
+  [1m[36m (0.2ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.4ms)[0m  DELETE FROM "boards"
+  [1m[36mFixture Insert (0.3ms)[0m  [1mINSERT INTO "boards" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:16:28', '2015-10-23 04:16:28', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO "boards" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:16:28', '2015-10-23 04:16:28', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM "comments"[0m
+  [1m[35mFixture Insert (0.2ms)[0m  INSERT INTO "comments" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:16:28', '2015-10-23 04:16:28', 980190962)
+  [1m[36mFixture Insert (0.2ms)[0m  [1mINSERT INTO "comments" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:16:28', '2015-10-23 04:16:28', 298486374)[0m
+  [1m[35mFixture Delete (0.3ms)[0m  DELETE FROM "owners"
+  [1m[36mFixture Insert (0.2ms)[0m  [1mINSERT INTO "owners" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:16:28', '2015-10-23 04:16:28', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO "owners" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:16:28', '2015-10-23 04:16:28', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM "posts"[0m
+  [1m[35mFixture Insert (0.2ms)[0m  INSERT INTO "posts" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:16:28', '2015-10-23 04:16:28', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO "posts" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:16:28', '2015-10-23 04:16:28', 298486374)[0m
+  [1m[35mFixture Delete (0.2ms)[0m  DELETE FROM "shops"
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO "shops" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:16:28', '2015-10-23 04:16:28', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO "shops" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:16:28', '2015-10-23 04:16:28', 298486374)
+  [1m[36mFixture Delete (0.4ms)[0m  [1mDELETE FROM "tasks"[0m
+  [1m[35mFixture Insert (0.2ms)[0m  INSERT INTO "tasks" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:16:28', '2015-10-23 04:16:28', 980190962)
+  [1m[36mFixture Insert (0.2ms)[0m  [1mINSERT INTO "tasks" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:16:28', '2015-10-23 04:16:28', 298486374)[0m
+  [1m[35mFixture Delete (1.5ms)[0m  DELETE FROM "users"
+  [1m[36mFixture Insert (0.4ms)[0m  [1mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:16:28', '2015-10-23 04:16:28', 980190962)[0m
+  [1m[35mFixture Insert (0.3ms)[0m  INSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:16:28', '2015-10-23 04:16:28', 298486374)
+  [1m[36m (52.6ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.4ms)[0m  ALTER TABLE "boards" ENABLE TRIGGER ALL;ALTER TABLE "comments" ENABLE TRIGGER ALL;ALTER TABLE "liked_posts_users" ENABLE TRIGGER ALL;ALTER TABLE "owners" ENABLE TRIGGER ALL;ALTER TABLE "owners_shops" ENABLE TRIGGER ALL;ALTER TABLE "owners_users" ENABLE TRIGGER ALL;ALTER TABLE "posts" ENABLE TRIGGER ALL;ALTER TABLE "scraped_posts_users" ENABLE TRIGGER ALL;ALTER TABLE "shops" ENABLE TRIGGER ALL;ALTER TABLE "tasks" ENABLE TRIGGER ALL;ALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "schema_migrations" ENABLE TRIGGER ALL
+  [1m[36m (0.2ms)[0m  [1mBEGIN[0m
+--------------------------
+PostTest: test_save_images
+--------------------------
+  [1m[35m (0.1ms)[0m  SAVEPOINT active_record_1
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "posts" ("created_at", "updated_at") VALUES ($1, $2) RETURNING "id"[0m  [["created_at", "2015-10-23 04:16:28.263807"], ["updated_at", "2015-10-23 04:16:28.263807"]]
+  [1m[35m (0.1ms)[0m  RELEASE SAVEPOINT active_record_1
+  [1m[36m (0.2ms)[0m  [1mROLLBACK[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.7ms)[0m  ALTER TABLE "boards" DISABLE TRIGGER ALL;ALTER TABLE "comments" DISABLE TRIGGER ALL;ALTER TABLE "liked_posts_users" DISABLE TRIGGER ALL;ALTER TABLE "owners" DISABLE TRIGGER ALL;ALTER TABLE "owners_shops" DISABLE TRIGGER ALL;ALTER TABLE "owners_users" DISABLE TRIGGER ALL;ALTER TABLE "posts" DISABLE TRIGGER ALL;ALTER TABLE "scraped_posts_users" DISABLE TRIGGER ALL;ALTER TABLE "shops" DISABLE TRIGGER ALL;ALTER TABLE "tasks" DISABLE TRIGGER ALL;ALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "schema_migrations" DISABLE TRIGGER ALL
+  [1m[36m (0.2ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.3ms)[0m  DELETE FROM "boards"
+  [1m[36mFixture Insert (0.4ms)[0m  [1mINSERT INTO "boards" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:22:52', '2015-10-23 04:22:52', 980190962)[0m
+  [1m[35mFixture Insert (0.2ms)[0m  INSERT INTO "boards" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:22:52', '2015-10-23 04:22:52', 298486374)
+  [1m[36mFixture Delete (0.2ms)[0m  [1mDELETE FROM "comments"[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO "comments" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:22:52', '2015-10-23 04:22:52', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO "comments" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:22:52', '2015-10-23 04:22:52', 298486374)[0m
+  [1m[35mFixture Delete (0.2ms)[0m  DELETE FROM "owners"
+  [1m[36mFixture Insert (0.2ms)[0m  [1mINSERT INTO "owners" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:22:52', '2015-10-23 04:22:52', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO "owners" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:22:52', '2015-10-23 04:22:52', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM "posts"[0m
+  [1m[35mFixture Insert (0.2ms)[0m  INSERT INTO "posts" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:22:52', '2015-10-23 04:22:52', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO "posts" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:22:52', '2015-10-23 04:22:52', 298486374)[0m
+  [1m[35mFixture Delete (0.2ms)[0m  DELETE FROM "shops"
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO "shops" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:22:52', '2015-10-23 04:22:52', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO "shops" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:22:52', '2015-10-23 04:22:52', 298486374)
+  [1m[36mFixture Delete (0.4ms)[0m  [1mDELETE FROM "tasks"[0m
+  [1m[35mFixture Insert (0.2ms)[0m  INSERT INTO "tasks" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:22:52', '2015-10-23 04:22:52', 980190962)
+  [1m[36mFixture Insert (0.2ms)[0m  [1mINSERT INTO "tasks" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:22:52', '2015-10-23 04:22:52', 298486374)[0m
+  [1m[35mFixture Delete (0.3ms)[0m  DELETE FROM "users"
+  [1m[36mFixture Insert (0.2ms)[0m  [1mINSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:22:52', '2015-10-23 04:22:52', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO "users" ("created_at", "updated_at", "id") VALUES ('2015-10-23 04:22:52', '2015-10-23 04:22:52', 298486374)
+  [1m[36m (0.7ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.3ms)[0m  ALTER TABLE "boards" ENABLE TRIGGER ALL;ALTER TABLE "comments" ENABLE TRIGGER ALL;ALTER TABLE "liked_posts_users" ENABLE TRIGGER ALL;ALTER TABLE "owners" ENABLE TRIGGER ALL;ALTER TABLE "owners_shops" ENABLE TRIGGER ALL;ALTER TABLE "owners_users" ENABLE TRIGGER ALL;ALTER TABLE "posts" ENABLE TRIGGER ALL;ALTER TABLE "scraped_posts_users" ENABLE TRIGGER ALL;ALTER TABLE "shops" ENABLE TRIGGER ALL;ALTER TABLE "tasks" ENABLE TRIGGER ALL;ALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "schema_migrations" ENABLE TRIGGER ALL
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+--------------------------
+PostTest: test_save_images
+--------------------------
+  [1m[35m (0.1ms)[0m  SAVEPOINT active_record_1
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "posts" ("created_at", "updated_at") VALUES ($1, $2) RETURNING "id"[0m  [["created_at", "2015-10-23 04:22:52.051350"], ["updated_at", "2015-10-23 04:22:52.051350"]]
+  [1m[35m (0.1ms)[0m  RELEASE SAVEPOINT active_record_1
+  [1m[36m (0.1ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  RELEASE SAVEPOINT active_record_1
+  [1m[36m (0.1ms)[0m  [1mROLLBACK[0m

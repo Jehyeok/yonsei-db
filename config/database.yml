@@ -1,0 +1,30 @@
+# SQLite version 3.x
+#   gem install sqlite3
+#
+#   Ensure the SQLite 3 gem is defined in your Gemfile
+#   gem 'sqlite3'
+#
+
+default: &default
+  adapter: mysql2
+  host: localhost
+  pool: 25
+  encoding: utf8
+  port: 3306
+  username: sex
+  password: sex # 배포 환경에서는 변경 필수
+
+development:
+  <<: *default
+  database: glitter_development
+
+# Warning: The database defined as "test" will be erased and
+# re-generated from your development database when you run "rake".
+# Do not set this db to the same as development or production.
+test:
+  <<: *default
+  database: glitter_test
+
+production:
+  <<: *default
+  database: glitter_production
